@@ -34,24 +34,36 @@ def get_intersections(x0, y0, r0, x1, y1, r1):
 #Initializations and definition
 #User defines radius and offsetY
 radius = 10 #radius of the 3 arcs that make up the triquetra
-offsetYPercentOfRadius = 1 # a value > 0 and < 2
+print (f"radius = {radius}")
+offsetYPercentOfRadius = 1.25 # a value > 0 and < 2
 line_width = 10
-output_file = "IntersectingCircles.png"
+output_file = f"IntersectingCircles_YOffset_{offsetYPercentOfRadius}.png"
 #Calculated Paremeters
 #Define Circles
 offsetY = offsetYPercentOfRadius * radius 
-offsetX = offsetY*math.tan(60)
+offsetX = offsetY*math.tan(math.radians(30))
+#offsetX = offsetY*math.tan(math.radians(30))
+print (f"offsetX = {offsetX}")
+print (f"offsetY = {offsetY}")
 circleCenterBot = [0,0]
-circleCenterUpperRight = [radius - offsetX, offsetY] 
-circleCenterUpperLeft = [-radius + offsetX, offsetY]
+#circleCenterUpperRight = [radius - offsetX, offsetY] 
+#circleCenterUpperLeft = [-radius + offsetX, offsetY]
+circleCenterUpperRight = [offsetX, offsetY] 
+circleCenterUpperLeft = [-offsetX, offsetY]
+print (f"circleCenterBot = {circleCenterBot}")
+print (f"circleCenterUpperRight = {circleCenterUpperRight}")
+print (f"circleCenterUpperLeft = {circleCenterUpperLeft}")
 #Define intersections of the circles
 intersectionsBottomAndUR = get_intersections(circleCenterBot[0],circleCenterBot[1],radius,circleCenterUpperRight[0],circleCenterUpperRight[1],radius)
+print (f"intersectionsBottomAndUR = {intersectionsBottomAndUR}")
 rightArcRightIntersectionMax = max(intersectionsBottomAndUR, key=lambda coord: coord[0])
 rightArcRightIntersectionMin = min(intersectionsBottomAndUR, key=lambda coord: coord[0])
 intersectionsBottomAndUL = get_intersections(circleCenterBot[0],circleCenterBot[1],radius,circleCenterUpperLeft[0],circleCenterUpperLeft[1],radius)
+print (f"intersectionsBottomAndUL = {intersectionsBottomAndUL}")
 leftArcLeftIntersectionMin = min(intersectionsBottomAndUL, key=lambda coord: coord[0])
 leftArcLeftIntersectionax = max(intersectionsBottomAndUL, key=lambda coord: coord[0])
 intersectionsULAndUR = get_intersections(circleCenterUpperLeft[0],circleCenterUpperLeft[1],radius,circleCenterUpperRight[0],circleCenterUpperRight[1],radius)
+print (f"intersectionsULAndUR = {intersectionsULAndUR}")
 topArcTopIntersectionMax  = max(intersectionsULAndUR, key=lambda coord: coord[1])
 topArcBottomIntersectionMin  = min(intersectionsULAndUR, key=lambda coord: coord[1])
 
@@ -70,15 +82,7 @@ arcs = [
      "theta2": math.degrees(math.atan2(topArcTopIntersectionMax[1] - circleCenterUpperLeft[1],topArcTopIntersectionMax[0] - circleCenterUpperLeft[0]))},  # Top left circle
 ]
 
-#chord length = 2Rsin(theta/2)
-#chordLengthCenter =  
-print (f"radius = {radius}")
-print (f"circleCenterBot {circleCenterBot}")
-print (f"circleCenterUpperRight {circleCenterUpperRight}")
-print (f"circleCenterUpperLeft {circleCenterUpperLeft}")
-print (f"intersectionsBottomAndUR {intersectionsBottomAndUR}")
-print (f"intersectionsBottomAndUL {intersectionsBottomAndUL}")
-print (f"intersectionsULAndUR {intersectionsULAndUR}")
+
 print (f"theta1ArcCenterBot {arcs[0]["theta1"]}")
 print (f"theta2ArcCenterBot {arcs[0]["theta2"]}")
 print (f"theta1ArcCenterUpperRight {arcs[1]["theta1"]}")
