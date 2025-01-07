@@ -31,18 +31,40 @@ def get_intersections(x0, y0, r0, x1, y1, r1):
         
         return [(x3, y3), (x4, y4)]
 
+def find_center(x1, y1, x2, y2, x3, y3):
+  """Finds the center (centroid) of a triangle.
+
+  Args:
+    x1, y1: Coordinates of the first vertex
+    x2, y2: Coordinates of the second vertex
+    x3, y3: Coordinates of the third vertex
+
+  Returns:
+    A tuple containing the x and y coordinates of the centroid.
+  """
+
+  center_x = (x1 + x2 + x3) / 3
+  center_y = (y1 + y2 + y3) / 3
+
+  return center_x, center_y
+
 #Initializations and definition
 #User defines radius and offsetY
 radius = 10 #radius of the 3 arcs that make up the triquetra
 print (f"radius = {radius}")
-offsetYPercentOfRadius = 1.25 # a value > 0 and < 2
+offsetYPercentOfRadius = 1.2 # a value > 0 and < 2
 line_width = 10
-output_file = f"IntersectingCircles_YOffset_{offsetYPercentOfRadius}.png"
+includeCentralCircle = True
+central_radius = 0.8 * radius
+if includeCentralCircle:
+    output_file = f"IntersectingCircles_YOffset_{offsetYPercentOfRadius}_withCenterCircle_{central_radius}.png"
+else:
+    output_file = f"IntersectingCircles_YOffset_{offsetYPercentOfRadius}_noCenterCircle.png"
+
 #Calculated Paremeters
 #Define Circles
 offsetY = offsetYPercentOfRadius * radius 
 offsetX = offsetY*math.tan(math.radians(30))
-#offsetX = offsetY*math.tan(math.radians(30))
 print (f"offsetX = {offsetX}")
 print (f"offsetY = {offsetY}")
 circleCenterBot = [0,0]
@@ -67,7 +89,11 @@ print (f"intersectionsULAndUR = {intersectionsULAndUR}")
 topArcTopIntersectionMax  = max(intersectionsULAndUR, key=lambda coord: coord[1])
 topArcBottomIntersectionMin  = min(intersectionsULAndUR, key=lambda coord: coord[1])
 
-#Define the 3 arcs from the intersection points using start and end angles
+central_center = (find_center(topArcTopIntersectionMax[0],topArcTopIntersectionMax[1],
+                             leftArcLeftIntersectionMin[0],leftArcLeftIntersectionMin[1],
+                             rightArcRightIntersectionMax[0],rightArcRightIntersectionMax[1]))
+print (f"central_center = {central_center}")
+#Define the 3 arcs from the interection points using start and end angles
     #Since the itersection points are relative to 0,0, I had to offset the values relative to the centers of the UL and UR circles when calculating the angles
 arcs = [
     {"center": circleCenterBot, 
@@ -115,9 +141,10 @@ for arc in arcs:
     )
     ax.add_patch(arc_patch)
 
-# Draw the central circle
-#central_circle = plt.Circle(central_center, central_radius, edgecolor="black", fill=False, linewidth=line_width, capstyle='round')
-#ax.add_artist(central_circle)
+if includeCentralCircle:
+    # Draw the central circle
+    central_circle = plt.Circle(central_center, central_radius, edgecolor="black", fill=False, linewidth=line_width, capstyle='round')
+    ax.add_artist(central_circle)
 
 # Set limits for better visualization
 ax.set_xlim(-2*radius, 4 * radius)
